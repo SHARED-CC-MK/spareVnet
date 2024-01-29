@@ -51,7 +51,7 @@ function Parts({user,userID}) {
             const response = await axios.get('https://script.google.com/macros/s/AKfycby1EVnylYrimmUmbuQ5iV8LDWO1YnKqErNV5qUB3Cm75vTRPrWG0obg-g3ZQe9inXe6Pg/exec?reqAsset='+brand+'_'+ModelId.replaceAll(' ','_').replaceAll('+','%2B'));
             // Assuming the response data is an array of image URLs
             setPartData(response.data.data.slice(1,));
-            setPartDataCopy(response.data.data.slice(1,));
+            setPartDataCopy(response.data.data.slice(1,).filter(item => item.Vendor_ID !== userID).filter(item => item.Units>0));
           //  console.log(partData);
            setIsLoading(false);
           } catch (error) {
@@ -72,7 +72,7 @@ function Parts({user,userID}) {
           } userID={userID} brand={brand} toggle={isOpen}/>} isOpen={isOpen} setIsOpen={toggleDrawer}/>
         <Drawer children={<Quotation orders={partDataCopy} model={ModelId} brand={brand} userID={userID}/>} isOpen={isOpen2} setIsOpen={toggleDrawer2}/>
         <Drawer children={<ViewPart inventory={
-                partData.filter(item => item.Vendor_ID === userID)
+                partData.filter(item => item.Vendor_ID === userID).filter(item => item.Units>0)
               } model={ModelId}/>} isOpen={isOpen4} setIsOpen={toggleDrawer4}/>
         <Drawer children={<>{map}</>} isOpen={isOpen3} setIsOpen={toggleDrawer3}/>
         <div className='pl-8 pr-6 overflow-y-auto overflow-hidden lg:h-96 xl:h-lvh'>
@@ -95,7 +95,7 @@ function Parts({user,userID}) {
             </tr>
         </thead>
             {  
-                partData.filter(item => item.Vendor_ID !== userID).map((value, index) => (     
+                partData.filter(item => item.Vendor_ID !== userID).filter(item => item.Units>0).map((value, index) => (     
                         <tbody>
                         <tr key={index}>
                             <td class="border-b text-left w-1/5">
